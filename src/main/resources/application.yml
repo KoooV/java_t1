@@ -1,19 +1,31 @@
 spring:
   application:
-    name: t1-java-demo
+    name: java_t1
   datasource:
-    url: "jdbc:postgresql://localhost:5432/t1_demo"
-    username: "postgres"
-    password: "0000"
-    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/t1
+    username: admin
+    password: '0000'
+    driver-class-name: org.postgresql.Driver
   liquibase:
-    enabled: true
-    change-log: db/changelog/db.changelog-master.xml
+    enabled: false
+  batch:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
     ROOT: ${LOG_LEVEL:INFO}
-    ru.t1.java.demo.controller.ClientController: DEBUG
+    ru.t1.java.demo: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 t1:
   scan-path: ru.t1.java.demo
