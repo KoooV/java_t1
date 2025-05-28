@@ -1,11 +1,13 @@
-package ru.t1.java.demo.aop;
+package ru.t1.java.demo.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface LogException {
-}
+@Retention(RetentionPolicy.RUNTIME)
+public @interface LogDataSourceError {
+    String operationType() default "";
+    String entityType() default "";
+} 

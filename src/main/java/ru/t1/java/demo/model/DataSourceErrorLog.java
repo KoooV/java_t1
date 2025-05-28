@@ -1,28 +1,40 @@
 package ru.t1.java.demo.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
-@AllArgsConstructor
-@NoArgsConstructor
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "data_source_error_logs")
 @Getter
 @Setter
-@Builder
-@Entity
-@Table(name = "data_source_error_log")
+@NoArgsConstructor
 public class DataSourceErrorLog extends AbstractPersistable<Long> {
+
+    @Column(name = "error_message", nullable = false)
+    private String errorMessage;
+
+    @Column(name = "error_class", nullable = false)
+    private String errorClass;
 
     @Column(name = "stack_trace", columnDefinition = "TEXT")
     private String stackTrace;
 
-    @Column(name = "text", columnDefinition = "TEXT")
-    private String text;
+    @Column(name = "timestamp", nullable = false)
+    private LocalDateTime timestamp;
 
-    @Column(name = "method_signature")
-    private String methodSignature;
+    @Column(name = "operation_type")
+    private String operationType;
 
+    @Column(name = "entity_type")
+    private String entityType;
 
+    @PrePersist
+    protected void onCreate() {
+        timestamp = LocalDateTime.now();
+    }
 }

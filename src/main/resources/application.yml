@@ -3,16 +3,17 @@ spring:
     name: java_t1
   datasource:
     url: jdbc:postgresql://localhost:5432/t1
-    username: admin
-    password: '0000'
+    username: postgres
+    password: postgres
     driver-class-name: org.postgresql.Driver
   liquibase:
-    enabled: false
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
   batch:
     enabled: false
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:

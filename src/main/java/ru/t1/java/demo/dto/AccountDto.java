@@ -1,5 +1,6 @@
 package ru.t1.java.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
+    @JsonProperty("id")
     private Long clientId;
+
     private BigDecimal balance;
+
     private Account.Type type;
 } 
