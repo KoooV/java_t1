@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS clients (
+CREATE TABLE IF NOT EXISTS clients (// СТАРЫЙ ЗАПРОС, БД ИЗМЕНИЛАСЬ
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,

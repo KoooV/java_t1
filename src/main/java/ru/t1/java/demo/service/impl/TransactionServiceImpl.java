@@ -9,12 +9,11 @@ import ru.t1.java.demo.model.Transaction;
 import ru.t1.java.demo.repository.AccountRepository;
 import ru.t1.java.demo.repository.TransactionRepository;
 import ru.t1.java.demo.service.TransactionService;
-import ru.t1.java.demo.aspect.LogDataSourceError;
+import ru.t1.java.demo.aspect.annotation.DataSourceError;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -102,13 +101,13 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    @LogDataSourceError(operationType = "CREATE", entityType = "TRANSACTION")
+    @DataSourceError(operationType = "CREATE", entityType = "TRANSACTION")
     public Transaction create(Transaction transaction) {
         // ... код метода
         return transactionRepository.save(transaction);
     }
     
-    @LogDataSourceError(operationType = "UPDATE", entityType = "TRANSACTION")
+    @DataSourceError(operationType = "UPDATE", entityType = "TRANSACTION")
     public Transaction update(Transaction transaction) {
         // ... код метода
         return transactionRepository.save(transaction);

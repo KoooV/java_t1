@@ -1,4 +1,4 @@
-package ru.t1.java.demo.annotation;
+package ru.t1.java.demo.aspect.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LogDataSourceError {
+public @interface DataSourceError {
     String operationType() default "";
     String entityType() default "";
 } 
