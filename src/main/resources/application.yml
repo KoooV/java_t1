@@ -2,7 +2,7 @@ spring:
   application:
     name: java_t1
   datasource:
-    url: jdbc:postgresql://localhost:5432/t1
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: '0000'
     driver-class-name: org.postgresql.Driver
@@ -16,12 +16,9 @@ spring:
       ddl-auto: update
     show-sql: true
     properties:
-
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        connection:
-          provider_disables_autocommit: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
 
@@ -35,3 +32,16 @@ logging:
 
 t1:
   scan-path: ru.t1.java.demo
+  metrics:
+    time-limit: 7000  # время в миллисекундах
+    enabled: true
+    include-packages:
+      - ru.t1.java.demo.service
+      - ru.t1.java.demo.controller
+    exclude-methods:
+      - getClientById
+      - getAllClients
+      - getAccountById
+      - getAllAccounts
+      - getTransactionById
+      - getAllTransactions

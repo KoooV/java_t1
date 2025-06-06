@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import ru.t1.java.demo.model.DataSourceErrorLog;
 import ru.t1.java.demo.repository.DataSourceErrorLogRepository;
 
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -74,8 +75,8 @@ public class LogDataSourceError {
     private Object entityType(MethodSignature signature) {
         String entityName = signature.getDeclaringType().getSimpleName();
         return entityName
-                .replace("ServiceImpl", "")
-                .replace("Service", "");
+                .replace("Repository", "")
+                .replace("Controller", "");
     }
 
 }

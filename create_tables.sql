@@ -27,4 +27,9 @@ CREATE TABLE IF NOT EXISTS data_source_error_logs (
     stack_trace TEXT NOT NULL,
     text TEXT NOT NULL,
     method_signature VARCHAR(255) NOT NULL
-); 
+);
+
+CREATE TABLE IF MOT EXISTS time_limit_exceed_log(
+    id SERIAL PRIMARY KEY,
+    error JSONB NOT NULL
+);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.t1.java.demo.aspect.annotation.DataSourceError;
 import ru.t1.java.demo.dto.AccountDto;
 import ru.t1.java.demo.service.AccountService;
 import ru.t1.java.demo.model.Account;
@@ -14,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService accountService;
-
+    @DataSourceError
     @PostMapping
     public ResponseEntity<Account> createAccount(@RequestBody AccountDto request) {
         Account account = accountService.create(
