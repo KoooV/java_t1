@@ -13,8 +13,8 @@ import java.util.List;
 @ConfigurationProperties(prefix = "t1.metrics")// связывает с metric в application yml
 @Data
 public class MetricConfig {
-    private long timeLimit;
-    private boolean enabled;
-    private List<String> includePackages;
-    private List<String> excludeMethods;
+    private long timeLimit;// предел работы метода
+    private boolean enabled;// логирование вкл/выкл
+    private List<String> includePackages;// пакеты обрабатываемые аспектом
+    private List<String> excludeMethods;// игнорируемые методы
 } 

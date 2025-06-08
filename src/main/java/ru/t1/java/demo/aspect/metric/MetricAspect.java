@@ -1,4 +1,4 @@
-package ru.t1.java.demo.aspect;
+package ru.t1.java.demo.aspect.metric;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +14,18 @@ import ru.t1.java.demo.model.TimeLimitExceedLog;
 import ru.t1.java.demo.repository.TimeLimitExceedLogRepository;
 import java.util.HashMap;
 import java.util.Map;
-import ru.t1.java.demo.aspect.annotation.Metric;
 
 
 @Aspect
 @Component
 @RequiredArgsConstructor
 public class MetricAspect {
-    private static Logger log = LoggerFactory.getLogger(MetricAspect.class);
+    private final Logger log = LoggerFactory.getLogger(MetricAspect.class);
     private final ObjectMapper objectMapper;
     private final TimeLimitExceedLogRepository repository;
     private final MetricConfig config;
 
-    @Around("@annotation(Metric)")
+    @Around("@annotation(ru.t1.java.demo.aspect.annotation.Metric)")
     public Object measuringTime(ProceedingJoinPoint joinPoint) throws Throwable{
         long startTime = System.currentTimeMillis();
         Object result = joinPoint.proceed();
@@ -47,7 +46,7 @@ public class MetricAspect {
             methodInfo.put("methodName", signature.getName());// название метода
             methodInfo.put("parameterName", signature.getParameterNames());// название параметров метода
             methodInfo.put("parameterTypes", signature.getParameterTypes());// типы параметров
-            errorLog.setMethodSignature(objectMapper.writeValueAsString(methodInfo));
+            errorLog.setMethodSignature(objectMapper.writeValueAsString(methodInfo));// конвертация в json
             repository.save(errorLog);
         }catch(Exception ex){
             log.error("Couldn't convert to JSON {}", ex.getMessage());

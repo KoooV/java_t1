@@ -27,7 +27,7 @@ public class LogDataSourceError {
     private final DataSourceErrorLogRepository repository;
     private final ObjectMapper objectMapper;// для преобразования в json
 
-    @Around("@annotation(DataSourceError)")
+    @Around("@annotation(ru.t1.java.demo.aspect.annotation.DataSourceError)")
     public Object logError(ProceedingJoinPoint joinPoint, LogDataSourceError logDataSourceError
     ) throws Throwable {// параметр, который предоставляет информацию - вызываемый метод, аргументы и позволяет выполнить метод через joinPoint.proceed()
         try{

@@ -34,7 +34,7 @@ t1:
   scan-path: ru.t1.java.demo
   metrics:
     time-limit: 7000  # время в миллисекундах
-    enabled: true
+    enabled: true # логирование
     include-packages:
       - ru.t1.java.demo.service
       - ru.t1.java.demo.controller
@@ -45,3 +45,5 @@ t1:
       - getAllAccounts
       - getTransactionById
       - getAllTransactions
+cache:
+  ttl: 300
