@@ -16,7 +16,7 @@ import java.util.Optional;
 @Aspect
 @Component
 @RequiredArgsConstructor
-public class CachedAspect{
+public class CacheAspect {
     private final CacheStore cacheStore;
     private final CacheConfig cacheConfig;
     @Around("@annotation(ru.t1.java.demo.aspect.annotation.Cached)")
