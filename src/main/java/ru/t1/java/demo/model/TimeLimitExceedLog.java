@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "time_limit_exceed_log")
+@Table(name = "time_limit_exceed_logs")
 public class TimeLimitExceedLog extends AbstractPersistable<Long> {
 
     @Type(JsonType.class)

@@ -6,61 +6,27 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "accounts")
 public class Account extends AbstractPersistable<Long> {
 
-    public Account(Client client, BigDecimal balance, Type type, List<Transaction> transaction) {
-        this.client = client;
-        this.balance = balance;
-        this.type = type;
-        this.transaction = transaction;
-    }
-
-    public Account() {
-    }
-
-    public static AccountBuilder builder() {
-        return new AccountBuilder();
-    }
-
-    public Client getClient() {
-        return this.client;
-    }
-
-    public BigDecimal getBalance() {
-        return this.balance;
-    }
-
-    public Type getType() {
-        return this.type;
-    }
-
-    public List<Transaction> getTransaction() {
-        return this.transaction;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setTransaction(List<Transaction> transaction) {
-        this.transaction = transaction;
-    }
-
     public enum Type {
         CREDIT,
         DEBIT
+    }
+
+    public enum Status{
+        ARRESTED,
+        BLOCKED,
+        CLOSED,
+        OPEN
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -78,41 +44,15 @@ public class Account extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transaction;
 
-    public static class AccountBuilder {
-        private Client client;
-        private BigDecimal balance;
-        private Type type;
-        private List<Transaction> transaction;
+    @Column(name = "account_id", nullable = false)
+    private UUID accountId = UUID.randomUUID();
 
-        AccountBuilder() {
-        }
 
-        public AccountBuilder client(Client client) {
-            this.client = client;
-            return this;
-        }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
 
-        public AccountBuilder balance(BigDecimal balance) {
-            this.balance = balance;
-            return this;
-        }
+    @Column(name = "frozen_amount", nullable = false)
+    private BigDecimal frozenAmount;
 
-        public AccountBuilder type(Type type) {
-            this.type = type;
-            return this;
-        }
-
-        public AccountBuilder transaction(List<Transaction> transaction) {
-            this.transaction = transaction;
-            return this;
-        }
-
-        public Account build() {
-            return new Account(this.client, this.balance, this.type, this.transaction);
-        }
-
-        public String toString() {
-            return "Account.AccountBuilder(client=" + this.client + ", balance=" + this.balance + ", type=" + this.type + ", transaction=" + this.transaction + ")";
-        }
-    }
 }
