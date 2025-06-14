@@ -8,8 +8,6 @@ import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "data_source_error_logs")
 @Getter
@@ -20,13 +18,10 @@ public class DataSourceErrorLog extends AbstractPersistable<Integer> {
     @Column(name = "message", nullable = false)
     private String errorMessage;
 
-
     @Column(name = "stack_trace", columnDefinition = "TEXT")// цепочка вызовов методов, которая привела к ошибке
     private String stackTrace;
-
 
     @Type(JsonType.class)
     @Column(name = "method_signature", columnDefinition = "jsonb")// хранение сигнатуры метода в виде json
     private String methodSignature;
-
 }

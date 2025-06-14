@@ -1,9 +1,13 @@
 package ru.t1.java.demo.config;
 
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+@Data
 @Configuration
-@EnableTransactionManagement
+@ConfigurationProperties(prefix = "transaction")
 public class TransactionConfig {
+    private int maxTransactionsPerPeriod = 5; // N транзакций
+    private int timeWindowMinutes = 5; // T минут
 }

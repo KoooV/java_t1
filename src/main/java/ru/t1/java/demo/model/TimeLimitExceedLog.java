@@ -1,6 +1,5 @@
 package ru.t1.java.demo.model;
 
-
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

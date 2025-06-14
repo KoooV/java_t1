@@ -28,14 +28,24 @@ services:
       TZ: "Europe/Moscow"
     networks:
       - default
-#  postgres:
-#    image: postgres:11.13
-#    container_name: postgres
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=0000
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=0000
+      - POSTGRES_DB=t1
+    volumes:
+      - ./dump_t1.sql:/docker-entrypoint-initdb.d/dump_t1.sql
+      - postgres_data:/var/lib/postgresql/data
+    command: ["postgres", "-c", "max_connections=1000"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   zookeeper_t1:
     image: confluentinc/cp-zookeeper:5.5.0
     hostname: zookeeper_t1
@@ -90,5 +100,9 @@ services:
       bash -c "
         echo 'Waiting for Kafka to be ready...' &&
         cub kafka-ready -b broker_t1:29092 1 30 &&
-        kafka-topics --create --if-not-exists --bootstrap-server broker_t1:29092 --topic metrics-topic --partitions 2 --replication-factor 2
+        kafka-topics --create --if-not-exists --bootstrap-server broker_t1:29092 --topic metrics-topic --partitions 2 --replication-factor 2 &&
+        kafka-topics --create --if-not-exists --bootstrap-server broker_t1:29092 --topic datasource-topic --partitions 2 --replication-factor 2
       "
+
+volumes:
+  postgres_data:
