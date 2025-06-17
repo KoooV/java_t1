@@ -10,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
 public class TransactionConfig {
     private int maxTransactionsPerPeriod = 5; // N транзакций
     private int timeWindowMinutes = 5; // T минут
+    private int rejectedLimit = 3; // Лимит отклоненных транзакций
 }

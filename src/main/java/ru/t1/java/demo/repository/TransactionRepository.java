@@ -32,4 +32,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("SELECT t FROM Transaction t WHERE t.account.accountId = :accountId AND t.timestamp >= :startTime ORDER BY t.timestamp DESC")
     List<Transaction> findRecentTransactionsByAccount(@Param("accountId") UUID accountId, @Param("startTime") LocalDateTime startTime);
+
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.account.accountId = :accountId AND t.status = 'REJECTED'")
+    long countRejectedTransactionsByAccount(@Param("accountId") UUID accountId);
 }

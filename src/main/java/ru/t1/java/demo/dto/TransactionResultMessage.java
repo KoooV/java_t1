@@ -14,4 +14,17 @@ public class TransactionResultMessage {
     private UUID accountId;
     private UUID transactionId;
     private Transaction.Status status;
+    private String reason;
+
+    public TransactionResultMessage(UUID accountId, UUID transactionId, Transaction.Status status) {
+        this.accountId = accountId;
+        this.transactionId = transactionId;
+        this.status = status;
+    }
+
+    public enum Status {
+        ACCEPTED,
+        REJECTED,
+        BLOCKED
+    }
 } 

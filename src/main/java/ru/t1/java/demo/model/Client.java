@@ -31,4 +31,13 @@ public class Client extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
+
+    public enum Status {
+        ACTIVE,
+        BLOCKED
+    }
+
 }

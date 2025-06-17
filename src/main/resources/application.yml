@@ -34,6 +34,11 @@ spring:
     topic:
       name: metrics-topic
 
+transaction:
+  max-transactions-per-period: 5
+  time-window-minutes: 5
+  rejected-limit: 3
+
 logging:
   level:
     ROOT: ${LOG_LEVEL:INFO}
@@ -59,3 +64,12 @@ t1:
       - getAllTransactions
 cache:
   ttl: 300
+
+validation:
+  service:
+    url: http://localhost:8081  # URL сервиса валидации
+    timeout: 5000  # таймаут в миллисекундах
+
+security:
+  jwt:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

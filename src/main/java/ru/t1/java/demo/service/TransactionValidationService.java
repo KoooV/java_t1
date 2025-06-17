@@ -41,6 +41,7 @@ public class TransactionValidationService {
      * Выполняет следующие проверки:
      * 1. Проверка количества транзакций за период времени
      * 2. Проверка достаточности средств на счете
+     * 3. Проверка количества отклоненных транзакций
      * Отправляет результат валидации в топик t1_demo_transaction_result.
      *
      * @param message JSON-сообщение с данными транзакции
@@ -55,6 +56,27 @@ public class TransactionValidationService {
             Account account = accountRepository.findByAccountId(transactionMessage.getAccountId());
             if (account == null) {
                 log.error("Account not found: {}", transactionMessage.getAccountId());
+                return;
+            }
+
+            // Проверка количества отклоненных транзакций
+            long rejectedCount = transactionRepository.countRejectedTransactionsByAccount(account.getAccountId());
+            if (rejectedCount >= transactionConfig.getRejectedLimit()) {
+                // Если превышен лимит отклоненных транзакций
+                Transaction transaction = transactionRepository.findByTransactionId(transactionMessage.getTransactionId());
+                if (transaction != null) {
+                    transaction.setStatus(Transaction.Status.REJECTED);
+                    transactionRepository.save(transaction);
+                    
+                    // Устанавливаем статус ARRESTED для счета
+                    account.setStatus(Account.Status.ARRESTED);
+                    accountRepository.save(account);
+                    
+                    sendTransactionResult(account.getAccountId(),
+                            transaction.getTransactionId(), Transaction.Status.REJECTED);
+                    log.info("Transaction rejected and account arrested due to exceeded rejected limit. Account: {}, Rejected count: {}", 
+                            account.getAccountId(), rejectedCount);
+                }
                 return;
             }
 

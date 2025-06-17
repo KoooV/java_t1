@@ -12,9 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.t1.java.demo.annotation.DataSourceError;
 import ru.t1.java.demo.annotation.Metric;
+import ru.t1.java.demo.client.ValidationServiceClient;
+import ru.t1.java.demo.dto.ClientStatusResponse;
 import ru.t1.java.demo.dto.TransactionMessage;
 import ru.t1.java.demo.dto.TransactionResultMessage;
+import ru.t1.java.demo.dto.ResponseMessage;
 import ru.t1.java.demo.model.Account;
+import ru.t1.java.demo.model.Client;
 import ru.t1.java.demo.model.Transaction;
 import ru.t1.java.demo.repository.AccountRepository;
 import ru.t1.java.demo.repository.TransactionRepository;
@@ -32,6 +36,7 @@ public class TransactionProcessingService {
     private final TransactionRepository transactionRepository;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
+    private final ValidationServiceClient validationServiceClient;
     private static final String TRANSACTION_TOPIC = "t1_demo_transactions";
     private static final String TRANSACTION_ACCEPT_TOPIC = "t1_demo_transaction_accept";
     private static final String TRANSACTION_RESULT_TOPIC = "t1_demo_transaction_result";
@@ -59,6 +64,43 @@ public class TransactionProcessingService {
 
             if (account.getStatus() != Account.Status.OPEN) {
                 log.warn("Account {} is not OPEN, current status: {}", account.getAccountId(), account.getStatus());
+                return;
+            }
+
+            // Проверяем статус клиента
+            ClientStatusResponse clientStatus = validationServiceClient.checkClientStatus(
+                account.getClient().getClientId(),
+                account.getAccountId()
+            );
+
+            if ("UNKNOWN".equals(clientStatus.getStatus())) {
+                log.warn("Client status is unknown for clientId: {}, accountId: {}", 
+                    account.getClient().getClientId(), account.getAccountId());
+                return;
+            }
+
+            if ("BLOCKED".equals(clientStatus.getStatus())) {
+                log.warn("Client is blocked for clientId: {}, accountId: {}", 
+                    account.getClient().getClientId(), account.getAccountId());
+                return;
+            }
+
+            // Проверяем черный список
+            ResponseMessage blacklistResponse = validationServiceClient.checkBlacklistStatus(account.getAccountId());
+            if (blacklistResponse.getStatus() == ResponseMessage.BlackListStatus.BLACKLIST) {
+                log.warn("Client is blacklisted for accountId: {}", account.getAccountId());
+                // Блокируем клиента и счета
+                account.getClient().setStatus(Client.Status.BLOCKED);
+                account.setStatus(Account.Status.BLOCKED);
+                accountRepository.save(account);
+                // Отклоняем транзакцию
+                Transaction transaction = new Transaction();
+                transaction.setTransactionId(transactionMessage.getTransactionId());
+                transaction.setAmount(transactionMessage.getAmount());
+                transaction.setAccount(account);
+                transaction.setStatus(Transaction.Status.REJECTED);
+                transaction.setTimestamp(LocalDateTime.now());
+                transactionRepository.save(transaction);
                 return;
             }
 

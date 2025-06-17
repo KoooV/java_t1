@@ -1,0 +1,19 @@
+package ru.t1.java.demo.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseMessage {
+    private String message;
+    private BlackListStatus status;
+
+    public enum BlackListStatus {
+        OK,
+        BLACKLIST,
+        UNKNOWN
+    }
+} 
