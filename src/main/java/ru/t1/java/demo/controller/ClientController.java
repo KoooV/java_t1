@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.t1.java.demo.dto.ClientDto;
 import ru.t1.java.demo.model.Client;
 import ru.t1.java.demo.service.ClientService;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -16,30 +19,43 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+    private final ModelMapper modelMapper;
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientDto> getClientById(@PathVariable Long id) {
-        return ResponseEntity.ok(clientService.getClientById(id));
+    public ResponseEntity<ClientDto> getClientById(@PathVariable UUID id) {
+        Client client = clientService.getClientById(id);
+        ClientDto clientDto = modelMapper.map(client, ClientDto.class);
+        return ResponseEntity.ok(clientDto);
     }
 
     @GetMapping
     public ResponseEntity<List<ClientDto>> getAllClients() {
-        return ResponseEntity.ok(clientService.getAllClients());
+        List<Client> clients = clientService.getAllClients();
+        List<ClientDto> clientDtos = clients.stream()
+                .map(client -> modelMapper.map(client, ClientDto.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientDtos);
     }
 
     @PostMapping
     public ResponseEntity<ClientDto> createClient(@RequestBody ClientDto clientDto) {
-        return new ResponseEntity<>(clientService.createClient(clientDto), HttpStatus.CREATED);
+        Client client = modelMapper.map(clientDto, Client.class);
+        Client createdClient = clientService.createClient(client);
+        ClientDto createdClientDto = modelMapper.map(createdClient, ClientDto.class);
+        return new ResponseEntity<>(createdClientDto, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientDto> updateClient(@PathVariable Long id, @RequestBody ClientDto clientDto) {
-        return ResponseEntity.ok(clientService.updateClient(clientDto, id));
+    public ResponseEntity<ClientDto> updateClient(@PathVariable UUID id, @RequestBody ClientDto clientDto) {
+        Client client = modelMapper.map(clientDto, Client.class);
+        Client updatedClient = clientService.updateClient(client, id);
+        ClientDto updatedClientDto = modelMapper.map(updatedClient, ClientDto.class);
+        return ResponseEntity.ok(updatedClientDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClient(@PathVariable UUID id) {
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }

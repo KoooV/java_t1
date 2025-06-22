@@ -21,8 +21,6 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
 
-
-
     @Metric
     @DataSourceError
     public List<Client> getAllClients() {
@@ -31,7 +29,7 @@ public class ClientService {
 
     @Metric
     @DataSourceError
-    public Client getClientById(Long id) {
+    public Client getClientById(UUID id) {
         return clientRepository.findByClientId(id).orElse(null);
     }
 
@@ -45,7 +43,7 @@ public class ClientService {
     @Metric
     @DataSourceError
     @Transactional
-    public Client updateClient(UUID clientId, Client clientDetails) {
+    public Client updateClient(Client clientDetails, UUID clientId) {
         Client client = clientRepository.findByClientId(clientId).orElse(null);
         if (client != null) {
             client.setFirstName(clientDetails.getFirstName());

@@ -1,11 +1,13 @@
 package ru.t1.java.demo.service;
 
+import org.springframework.stereotype.Service;
 import ru.t1.java.demo.dto.TransactionDto;
 import ru.t1.java.demo.model.Transaction;
 
 
 import java.util.List;
 
+@Service
 public interface TransactionService {
     Transaction getAmountById(Long id);
     List<TransactionDto> getAllTransaction();

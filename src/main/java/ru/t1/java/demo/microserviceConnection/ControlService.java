@@ -26,10 +26,10 @@ public class ControlService {
     @Value("${unblock.service.url}")
     private String unblockServiceUrl;
 
-    @Value("$metrics.name.blockedClients")
+    @Value("${metrics.name.blockedClients}")
     private int blockedClients;//число клиентов для запроса на разблокировку
 
-    @Value("metrics.name.arrestedAccounts")
+    @Value("${metrics.name.arrestedAccounts}")
     private int arrestedAccounts;
 
     @Scheduled(fixedRateString = "${metrics.name.period:120000}")
@@ -52,14 +52,15 @@ public class ControlService {
     public void unblockClient(){
         try{
             List<ClientStatusDto> clients = getClientsToUnblock();
+
             for(ClientStatusDto client : clients){
-                unblockServiceUrl = unblockServiceUrl + "/unblock-client?client=" + client.getClientId();
-                String responce = restTemplate.postForObject(unblockServiceUrl, null, String.class);//ссылка на размещение + null тк body запроса null + тип возвращаемого объекта
+                String requestUrl = unblockServiceUrl + "/unblock-client?clientId=" + client.getClientId();
+                String responce = restTemplate.postForObject(requestUrl, null, String.class);//ссылка на размещение + null тк body запроса null + тип возвращаемого объекта
                 log.info("Send client to unblock with id: {}", client.getClientId());
             }
         }
         catch(Exception e){
-            log.error("Error sending client to unblock microservice");
+            log.error("Error sending client to unblock microservice", e);
         }
     }
 
@@ -67,12 +68,12 @@ public class ControlService {
         try{
         List<AccountStatusDto> accounts = getAccountsToUnarrested();
         for(AccountStatusDto account : accounts ){
-            unblockServiceUrl = unblockServiceUrl + "/unblock-account?accountId=" + account.getAccountId();
-            String responce = restTemplate.postForObject(unblockServiceUrl, null, String.class);
+            String requestUrl = unblockServiceUrl + "/unblock-account?accountId=" + account.getAccountId();
+            String responce = restTemplate.postForObject(requestUrl, null, String.class);
             log.info("Send account to unarrested with id: {}", account.getAccountId());
         }
         }catch(Exception c){
-            log.error("Error sending account to unarrested microservice");
+            log.error("Error sending account to unarrested microservice", c);
         }
 
 
