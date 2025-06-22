@@ -1,10 +1,11 @@
 package ru.t1.java.demo.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.aspectspringbootstarter.annotation.DataSourceError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.java.demo.aspect.annotation.DataSourceError;
+
 import ru.t1.java.demo.dto.AccountDto;
 import ru.t1.java.demo.service.AccountService;
 import ru.t1.java.demo.model.Account;

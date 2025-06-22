@@ -3,6 +3,8 @@ package ru.t1.java.demo.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.aspectspringbootstarter.annotation.DataSourceError;
+import org.example.aspectspringbootstarter.annotation.Metric;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -10,9 +12,7 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.t1.java.demo.annotation.DataSourceError;
-import ru.t1.java.demo.annotation.Metric;
-import ru.t1.java.demo.client.ValidationServiceClient;
+import ru.t1.java.demo.microserviceConnection.ValidationService;
 import ru.t1.java.demo.dto.ClientStatusResponse;
 import ru.t1.java.demo.dto.TransactionMessage;
 import ru.t1.java.demo.dto.TransactionResultMessage;
@@ -25,7 +25,6 @@ import ru.t1.java.demo.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -36,7 +35,7 @@ public class TransactionProcessingService {
     private final TransactionRepository transactionRepository;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
-    private final ValidationServiceClient validationServiceClient;
+    private final ValidationService validationService;
     private static final String TRANSACTION_TOPIC = "t1_demo_transactions";
     private static final String TRANSACTION_ACCEPT_TOPIC = "t1_demo_transaction_accept";
     private static final String TRANSACTION_RESULT_TOPIC = "t1_demo_transaction_result";
@@ -68,7 +67,7 @@ public class TransactionProcessingService {
             }
 
             // Проверяем статус клиента
-            ClientStatusResponse clientStatus = validationServiceClient.checkClientStatus(
+            ClientStatusResponse clientStatus = validationService.checkClientStatus(
                 account.getClient().getClientId(),
                 account.getAccountId()
             );
@@ -86,7 +85,7 @@ public class TransactionProcessingService {
             }
 
             // Проверяем черный список
-            ResponseMessage blacklistResponse = validationServiceClient.checkBlacklistStatus(account.getAccountId());
+            ResponseMessage blacklistResponse = validationService.checkBlacklistStatus(account.getAccountId());
             if (blacklistResponse.getStatus() == ResponseMessage.BlackListStatus.BLACKLIST) {
                 log.warn("Client is blacklisted for accountId: {}", account.getAccountId());
                 // Блокируем клиента и счета

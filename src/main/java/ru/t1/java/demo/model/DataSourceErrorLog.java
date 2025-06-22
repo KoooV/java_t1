@@ -13,7 +13,7 @@ import io.hypersistence.utils.hibernate.type.json.JsonType;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DataSourceErrorLog extends AbstractPersistable<Integer> {
+public class DataSourceErrorLog extends AbstractPersistable<Long> {
 
     @Column(name = "message", nullable = false)
     private String errorMessage;

@@ -1,4 +1,4 @@
-package ru.t1.java.demo.aspect.cache;
+package ru.t1.java.demo.cache;
 
 
 import lombok.Getter;

@@ -84,6 +84,7 @@ CREATE TABLE public.clients (
     first_name character varying(255) NOT NULL,
     last_name character varying(255) NOT NULL,
     middle_name character varying(255) NOT NULL,
+    status character varying(255) NOT NULL,
     client_id uuid NOT NULL
 );
 

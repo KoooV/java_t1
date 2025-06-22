@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.java.demo.dto.ClientDto;
+import ru.t1.java.demo.model.Client;
 import ru.t1.java.demo.service.ClientService;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ClientController {
 
     private final ClientService clientService;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientDto> getClientById(@PathVariable Long id) {

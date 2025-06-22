@@ -73,3 +73,15 @@ validation:
 security:
   jwt:
     token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+unblock:
+  service:
+    url: http://localhost:8082
+
+metrics:
+  name:
+    blockedClients: 3
+    arrestedAccounts: 3
+    period: 120000
+
+

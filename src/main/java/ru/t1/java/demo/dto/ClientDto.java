@@ -10,9 +10,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.UUID;
 
-/**
- * DTO for {@link ru.t1.java.demo.model.Client}
- */
+//DTO for ru.t1.java.demo.model.Client
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

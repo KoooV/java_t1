@@ -1,11 +1,21 @@
 package ru.t1.java.demo.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import ru.t1.java.demo.dto.ClientStatusDto;
 import ru.t1.java.demo.model.Client;
 
+
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    @Override
-    Optional<Client> findById(Long aLong);
+
+    Optional<Client> findByClientId(Long clientId);
+
+    @Query("SELECT new ru.t1.java.demo.dto.ClientStatusDto(c.status, c.clientId) FROM Client c" )
+    List<ClientStatusDto> clientsToUnlock(Pageable pageable);//тк запрос ресурсозатратный, реализую ограничение количества возвращаемых строк на уровне SQL
+
 }

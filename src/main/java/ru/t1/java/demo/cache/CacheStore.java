@@ -1,18 +1,21 @@
-package ru.t1.java.demo.aspect.cache;
+package ru.t1.java.demo.cache;
 
+import org.example.aspectspringbootstarter.interfaceToMainProject.CacheStoreStarter;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class CacheStore {//класс управления кэшем
+public class CacheStore implements CacheStoreStarter {//класс управления кэшем
     private final Map<String, CacheEntry> store = new ConcurrentHashMap<>();
 
+    @Override
     public void put(String key, Object value, long ttl){//добавление или управлние кэшем
         store.put(key, new CacheEntry(value, ttl));
     }
 
+    @Override
     public Object get(String key){//получение кэша по ключу
         CacheEntry cache = store.get(key);
         if(cache.isExpired() || cache == null){

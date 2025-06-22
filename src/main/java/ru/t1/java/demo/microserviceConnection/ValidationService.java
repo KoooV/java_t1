@@ -1,4 +1,4 @@
-package ru.t1.java.demo.client;
+package ru.t1.java.demo.microserviceConnection;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ValidationServiceClient {
+public class ValidationService {
 
     private final RestTemplate restTemplate;
 
